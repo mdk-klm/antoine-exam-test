@@ -21,7 +21,7 @@ describe('NoteForm', () => {
     const submitButton = screen.getByText('Ajouter note');
 
     const title = 'Sample Title';
-    const note = '8';
+    const note = 8;
     const commentary = 'Sample Commentary';
 
     fireEvent.change(titleInput, { target: { value: title } });
