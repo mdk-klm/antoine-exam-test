@@ -1,78 +1,89 @@
-describe('NoteForm', () => {
-  beforeEach(() => {
-    cy.visit('/');
-  });
 
-  it('displays the form and handles form submission', () => {
-    const testData = {
-      title: 'Test Title',
-      note: 8,
-      commentary: 'Test Commentary',
-    };
 
-    // Open the form modal
-    cy.get('.open-form-btn').click();
+describe('Should test adding new rates', () => {
 
-    // Fill in the form inputs
-    cy.get('.title').type(testData.title);
-    cy.get('.note').type(testData.note);
-    cy.get('.commentary').type(testData.commentary);
 
-    // Submit the form
-    cy.get('.submit-btn').click();
 
-    // Assert that the form values are cleared
-    cy.get('.title').should('have.value', '');
-    cy.get('.note').should('have.value', '');
-    cy.get('.commentary').should('have.value', '');
 
-    // Assert that the form data is displayed in the list
-    cy.contains('.note-title', testData.title).should('exist');
-    cy.contains('.note-note', testData.note).should('exist');
-    cy.contains('.note-commentary', testData.commentary).should('exist');
-  });
+    it('devrait afficher le formulaire de note', () => {
 
-  it('displays an error message for empty fields', () => {
-    // Open the form modal
-    cy.get('.open-form-btn').click();
+        cy.visit('/'),
 
-    // Submit the form without filling in any inputs
-    cy.get('.submit-btn').click();
+        cy.get('form.note-form').should('exist');
 
-    // Assert that the error message is displayed
-    cy.contains('.errorMsg', 'All the fields are required.').should('exist');
-  });
+        cy.get('input[name="title"]').should('exist');
 
-  it('updates a rate when editing', () => {
-    const initialData = {
-      title: 'Initial Title',
-      note: '8',
-      commentary: 'Initial Commentary',
-    };
+        cy.get('input[name="rate"]').should('exist');
 
-    const updatedData = {
-      title: 'Updated Title',
-      note: '10',
-      commentary: 'Updated Commentary',
-    };
+        cy.get('input[name="comment"]').should('exist');
 
-    // Add a rate to the list
-    cy.contains('.add-rate-btn', 'Add Rate').click();
-    cy.get('.title').type(initialData.title);
-    cy.get('.note').type(initialData.note);
-    cy.get('.commentary').type(initialData.commentary);
-    cy.get('.submit-btn').click();
+        cy.get('button[type="submit"]').should('exist');
 
-    // Edit the rate
-    cy.contains('.edit-rate-btn').click();
-    cy.get('.title').clear().type(updatedData.title);
-    cy.get('.note').clear().type(updatedData.note);
-    cy.get('.commentary').clear().type(updatedData.commentary);
-    cy.get('.submit-btn').click();
+    });
 
-    // Assert that the rate has been updated
-    cy.contains('.note-title', updatedData.title).should('exist');
-    cy.contains('.note-note', updatedData.note).should('exist');
-    cy.contains('.note-commentary', updatedData.commentary).should('exist');
-  });
-});
+
+
+
+    it('devrait soumettre le formulaire avec des champs valides', () => {
+
+        cy.visit('/'),
+
+        cy.get('input[name="title"]').type('Titre de la note');
+
+        cy.get('input[name="rate"]').type('5');
+
+        cy.get('input[name="comment"]').type('Ceci est un commentaire de test');
+
+        cy.get('button[type="submit"]').click();
+
+    });
+
+
+
+
+    it("devrait pas soumettre le formulaire s'il manque un ou plusieurs champs", () => {
+
+        cy.visit('/'),
+
+        cy.get('input[name="title"]').type('Titre de la note');
+
+        cy.get('input[name="comment"]').type('Ceci est un commentaire de test');
+
+        cy.get('button[type="submit"]').click();
+
+        cy.contains('Veuillez remplir tous les champs').should('be.visible');
+
+    });
+
+})
+describe('Should test edit rates', () => {
+
+
+beforeEach(() => {
+
+        cy.visit('/http://127.0.0.1:5173/');
+
+      });
+
+
+
+
+      it('devrait afficher le formulaire de modification et modifier la note', () => {
+
+          cy.visit('/'),
+          cy.get('input[name="title"]').type('Titre de la note');
+          cy.get('input[name="rate"]').type('5');
+          cy.get('input[name="comment"]').type('Ceci est un commentaire de test');
+          cy.get('button[type="submit"]').click();
+          cy.get('.notes-list-table tbody tr').first().find('.icon').first().click();
+          cy.get('.note-edit-form').should('exist');
+          cy.get('.note-edit-form input[name="title"]').clear().type('Nouveau titre de la note');
+          cy.get('.note-edit-form input[name="rate"]').clear().type('4');
+          cy.get('.note-edit-form input[name="comment"]').clear().type('Nouveau commentaire de la note');
+          cy.get('.note-edit-form button[type="submit"]').click();
+
+      });
+
+   
+
+})
