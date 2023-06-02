@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Action, Rate } from '../reducer/ratesReducer';
-import ContactItem from './NotetItem';
+import ContactItem from './NoteItem';
 
 interface ContactListProps {
   rates: Rate[];

@@ -1,128 +1,115 @@
-import { State, ratesReducer, Action } from "../reducer/ratesReducer";
+import React from 'react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import NoteForm from './NoteForm';
 
+describe('NoteForm', () => {
+  it('submits the form with the correct values', () => {
+    const mockDispatch = jest.fn();
+    const mockToggleModal = jest.fn();
 
+    render(
+      <NoteForm
+        dispatch={mockDispatch}
+        dataToEdit={undefined}
+        toggleModal={mockToggleModal}
+      />
+    );
 
+    const titleInput = screen.getByLabelText('Titre');
+    const noteInput = screen.getByLabelText('Note');
+    const commentaryInput = screen.getByLabelText('Commentaire');
+    const submitButton = screen.getByText('Ajouter note');
 
+    const title = 'Sample Title';
+    const note = '8';
+    const commentary = 'Sample Commentary';
 
-describe('noteReducer', () => {
+    fireEvent.change(titleInput, { target: { value: title } });
+    fireEvent.change(noteInput, { target: { value: note } });
+    fireEvent.change(commentaryInput, { target: { value: commentary } });
+    fireEvent.click(submitButton);
 
-  let initialState: State;
-
-  beforeEach(() => {
-
-    initialState = {
-      rates: [
-
-        { id: 1, title: 'Note 1', note: 5, commentary: 'Hey note' },
-        { id: 2, title: 'Note 2', note: 3, commentary: 'Average note' }
-
-      ]
-    };
-  });
-
-
-  it('should add a new note when action type is ADD_NOTE', () => {
-
-    const action: Action = {
+    expect(mockDispatch).toHaveBeenCalledWith({
       type: 'ADD_NOTE',
-      payload: { id: 3, title: 'Note 3', note: 14, commentary: 'Good note' }
-    };
-
-
-    const newState = ratesReducer(initialState, action);
-
-
-    expect(newState.rates).toHaveLength(initialState.rates.length + 1);
-    expect(newState.rates).toContainEqual(action.payload);
-
-  });
-
-
-
-
-  it('should update the note when action type is UPDATE_NOTE', () => {
-
-    const action: Action = {
-
-      type: 'UPDATE_NOTE',
-
       payload: {
+        id: expect.any(Number),
+        title,
+        note,
+        commentary,
+      },
+    });
 
-        id: 2,
-
-        updates: { id: 1, title: '', note: 4, commentary: 'Updated note' }
-
-      }
-
-    };
-
-
-
-
-    const newState = ratesReducer(initialState, action);
-
-
-
-
-    expect(newState.rates).toHaveLength(initialState.rates.length);
-
-    expect(newState.rates[1].note).toEqual(action.payload.updates.rate);
-
-    expect(newState.rates[1].commentary).toEqual(action.payload.updates.commentary);
-
+    expect(titleInput.value).toBe('');
+    expect(noteInput.value).toBe('');
+    expect(commentaryInput.value).toBe('');
+    expect(mockToggleModal).toHaveBeenCalled();
   });
 
+  it('displays an error message when fields are empty', () => {
+    const mockDispatch = jest.fn();
+    const mockToggleModal = jest.fn();
 
+    render(
+      <NoteForm
+        dispatch={mockDispatch}
+        dataToEdit={undefined}
+        toggleModal={mockToggleModal}
+      />
+    );
 
+    const submitButton = screen.getByText('Ajouter note');
 
-  it('should delete the note when action type is DELETE_NOTE', () => {
+    fireEvent.click(submitButton);
 
-    const action: Action = {
-
-      type: 'DELETE_NOTE',
-
-      payload: { id: 1 }
-
-    };
-
-
-
-
-    const newState = ratesReducer(initialState, action);
-
-
-
-
-    expect(newState.rates).toHaveLength(initialState.rates.length - 1);
-
-    expect(newState.rates).not.toContainEqual(initialState.rates[0]);
-
+    expect(mockDispatch).not.toHaveBeenCalled();
+    expect(screen.getByText('All the fields are required.')).toBeInTheDocument();
   });
 
-
-
-
-  it('should return the current state when action type is unknown', () => {
-
-    const action: Action = {
-
-      type: 'UNKNOWN_ACTION',
-
-      payload: { id: 1 }
-
+  it('submits the form with updated values when editing a note', () => {
+    const mockDispatch = jest.fn();
+    const mockToggleModal = jest.fn();
+    const mockDataToEdit = {
+      id: 1,
+      title: 'Old Title',
+      note: '7',
+      commentary: 'Old Commentary',
     };
 
+    render(
+      <NoteForm
+        dispatch={mockDispatch}
+        dataToEdit={mockDataToEdit}
+        toggleModal={mockToggleModal}
+      />
+    );
 
+    const titleInput = screen.getByLabelText('Titre');
+    const noteInput = screen.getByLabelText('Note');
+    const commentaryInput = screen.getByLabelText('Commentaire');
+    const submitButton = screen.getByText('Update rate');
 
+    const updatedTitle = 'Updated Title';
+    const updatedNote = '9';
+    const updatedCommentary = 'Updated Commentary';
 
-    const newState = ratesReducer(initialState, action);
+    fireEvent.change(titleInput, { target: { value: updatedTitle } });
+    fireEvent.change(noteInput, { target: { value: updatedNote } });
+    fireEvent.change(commentaryInput, { target: { value: updatedCommentary } });
+    fireEvent.click(submitButton);
 
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'UPDATE_NOTE',
+      payload: {
+        id: mockDataToEdit.id,
+        updates: {
+          id: expect.any(Number),
+          title: updatedTitle,
+          note: updatedNote,
+          commentary: updatedCommentary,
+        },
+      },
+    });
 
-
-
-    expect(newState).toEqual(initialState);
-
+    expect(mockToggleModal).toHaveBeenCalled();
   });
-
 });
-
