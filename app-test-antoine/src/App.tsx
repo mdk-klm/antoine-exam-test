@@ -1,18 +1,18 @@
 import { useEffect, useReducer, useState } from 'react';
-import ContactForm from './components/ContactForm';
-import ContactList from './components/ContactList';
+import ContactForm from './components/NoteForm';
+import ContactList from './components/NoteList';
 import EditModal from './components/EditModal';
 import Header from './components/Header';
-import { Contact, contactsReducer, State } from './reducer/contactsReducer';
+import { Rate, ratesReducer, State } from './reducer/ratesReducer';
 
 const initialState: State = {
-  contacts: []
+  rates: []
 };
 
 function App() {
-  const [state, dispatch] = useReducer(contactsReducer, initialState);
+  const [state, dispatch] = useReducer(ratesReducer, initialState);
   const [showModal, setShowModal] = useState(false);
-  const [dataToEdit, setDataToEdit] = useState<Contact | undefined>(undefined);
+  const [dataToEdit, setDataToEdit] = useState<Rate | undefined>(undefined);
 
   useEffect(() => {
     if (!showModal) {
@@ -25,7 +25,7 @@ function App() {
   };
 
   const handleEdit = (id: number) => {
-    setDataToEdit(state.contacts.find((contact) => contact.id === id));
+    setDataToEdit(state.rates.find((rate) => rate.id === id));
     toggleModal();
   };
 
@@ -39,9 +39,9 @@ function App() {
           toggleModal={toggleModal}
         />
         <hr />
-        {state.contacts.length > 0 && (
+        {state.rates.length > 0 && (
           <ContactList
-            contacts={state.contacts}
+            rates={state.rates}
             handleEdit={handleEdit}
             dispatch={dispatch}
           />

@@ -1,14 +1,14 @@
 import { FC, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { Action, Contact } from '../reducer/contactsReducer';
+import { Action, Rate } from '../reducer/ratesReducer';
 
-interface ContactFormProps {
+interface NoteFormProps {
   dispatch: React.Dispatch<Action>;
-  dataToEdit: Contact | undefined;
+  dataToEdit: Rate | undefined;
   toggleModal: () => void;
 }
 
-const ContactForm: FC<ContactFormProps> = ({
+const NoteForm: FC<NoteFormProps> = ({
   
   dispatch,
   dataToEdit,
@@ -39,7 +39,6 @@ const ContactForm: FC<ContactFormProps> = ({
 
     if (
       title.trim() === '' ||
-      note.trim() === '' ||
       commentary.trim() === ''
     ) {
       setErrorMsg('All the fields are required.');
@@ -48,7 +47,7 @@ const ContactForm: FC<ContactFormProps> = ({
 
     if (!dataToEdit) {
       dispatch({
-        type: 'ADD_CONTACT',
+        type: 'ADD_NOTE',
         payload: {
           id: Date.now(), // returns current timestamp
           ...contact
@@ -62,7 +61,7 @@ const ContactForm: FC<ContactFormProps> = ({
       setErrorMsg('');
     } else {
       dispatch({
-        type: 'UPDATE_CONTACT',
+        type: 'UPDATE_NOTE',
         payload: {
           id: dataToEdit.id,
           updates: {
@@ -110,11 +109,11 @@ const ContactForm: FC<ContactFormProps> = ({
       </Form.Group>
       <Form.Group controlId='submit'>
         <Button variant='secondary' type='submit' className='submit-btn'>
-          {dataToEdit ? 'Update Contact' : 'Ajouter note'}
+          {dataToEdit ? 'Update rate' : 'Ajouter note'}
         </Button>
       </Form.Group>
     </Form>
   );
 };
 
-export default ContactForm;
+export default NoteForm;

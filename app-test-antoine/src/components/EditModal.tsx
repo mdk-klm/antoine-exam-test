@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { Modal } from 'react-bootstrap';
-import { Action, Contact } from '../reducer/contactsReducer';
-import ContactForm from './ContactForm';
+import { Action, Rate } from '../reducer/ratesReducer';
+import ContactForm from './NoteForm';
 
 interface EditModalProps {
   showModal: boolean;
-  dataToEdit: Contact | undefined;
+  dataToEdit: Rate | undefined;
   toggleModal: () => void;
   dispatch: React.Dispatch<Action>;
 }

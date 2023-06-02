@@ -3,7 +3,7 @@ import { FC } from 'react';
 const Header: FC = () => {
   return (
     <header>
-      <h1>Contact Manager App</h1>
+      <h1>Manager de notes</h1>
     </header>
   );
 };

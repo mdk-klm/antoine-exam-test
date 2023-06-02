@@ -1,7 +1,7 @@
 import React from 'react';
 import { FC } from 'react';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
-import { Action, Contact } from '../reducer/contactsReducer';
+import { Action, Rate } from '../reducer/ratesReducer';
 
 interface ExtraProps {
     handleEdit: (id: number) => void;
@@ -9,7 +9,7 @@ interface ExtraProps {
     backgroundColor: string;
 }
 
-const ContactItem: FC<Contact & ExtraProps> = ({
+const NoteItem: FC<Rate & ExtraProps> = ({
                                                        id,
                                                        title,
                                                        note,
@@ -35,7 +35,7 @@ const ContactItem: FC<Contact & ExtraProps> = ({
                         );
                         if (confirmDelete) {
                             dispatch({
-                                type: 'DELETE_CONTACT',
+                                type: 'DELETE_NOTE',
                                 payload: { id }
                             });
                         }
@@ -47,4 +47,4 @@ const ContactItem: FC<Contact & ExtraProps> = ({
     );
 };
 
-export default ContactItem;
+export default NoteItem;

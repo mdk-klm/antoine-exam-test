@@ -1,14 +1,14 @@
 import { FC } from 'react';
-import { Action, Contact } from '../reducer/contactsReducer';
-import ContactItem from './ContactItem';
+import { Action, Rate } from '../reducer/ratesReducer';
+import ContactItem from './NotetItem';
 
 interface ContactListProps {
-  contacts: Contact[];
+  rates: Rate[];
   handleEdit: (id: number) => void;
   dispatch: React.Dispatch<Action>;
 }
 
-const ContactList: FC<ContactListProps> = ({ contacts, handleEdit, dispatch }) => {
+const NoteList: FC<ContactListProps> = ({ rates, handleEdit, dispatch }) => {
   return (
       <div className="contacts-list">
           <h3 className="contacts-list-title">List of Notes</h3>
@@ -24,7 +24,7 @@ const ContactList: FC<ContactListProps> = ({ contacts, handleEdit, dispatch }) =
                   </tr>
                   </thead>
                   <tbody>
-                  {contacts.map((com) => {
+                  {rates.map((com) => {
                       let backgroundColor = '';
 
                       if (com.note < 8) {
@@ -53,4 +53,4 @@ const ContactList: FC<ContactListProps> = ({ contacts, handleEdit, dispatch }) =
       </div>
   );
 };
-export default ContactList;
+export default NoteList;
